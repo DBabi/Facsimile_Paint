@@ -25,6 +25,7 @@ namespace _MyPaint
             DashPattern = new float[] { 3, 3, 3, 3 },
             DashStyle = DashStyle.Custom
         };
+        private float zoom;
         private Shape selectedShape;
         private System.Drawing.Rectangle selectedRegion;
         private bool isMouseDown;
@@ -45,6 +46,7 @@ namespace _MyPaint
             buttons = new List<Button> { btnLine, btnRectangle, btnEllipse, btnBezier, btnPolygon, btnSelect };
             cbbDashStyle.SelectedIndex = 0;
             nmrSize.Value = 1;
+            zoom = 1f;
         }
 
         #region Support Function
@@ -194,8 +196,8 @@ namespace _MyPaint
         private void pnlPaint_Paint(object sender, PaintEventArgs e)
         {
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-
-            shapes.ForEach(shape =>
+            e.Graphics.ScaleTransform(zoom, zoom);
+            foreach(Shape shape in shapes)
             {
                 if (shape.isSelect)
                 {
@@ -228,7 +230,7 @@ namespace _MyPaint
                 {
                     shape.Draw(e.Graphics);
                 }
-            });
+            }
 
             if (isMouseSelect)
             {
@@ -254,7 +256,8 @@ namespace _MyPaint
                 }
                 else
                 {
-                    shapes.ForEach(shape => shape.isSelect = false);
+                    foreach (Shape s in shapes)
+                        s.isSelect = false;
                     pnlPaint.Invalidate();
                     for (int i = 0; i < shapes.Count; i++)
                     {
@@ -479,6 +482,7 @@ namespace _MyPaint
             }
         }
 
+        //End draw bezier and polygon
         private void pnlPaint_DoubleClick(object sender, EventArgs e)
         {
             if (isDrawPolygon)
@@ -504,13 +508,14 @@ namespace _MyPaint
             }
 
         }
-
         #endregion
 
         #region Controls Event
+        //Event select shapes
         private void btnSelect_Click(object sender, EventArgs e)
         {
-            shapes.ForEach(shape => shape.isSelect = false);
+            foreach (Shape s in shapes)
+                s.isSelect = false;
             pnlPaint.Invalidate();
 
             currentShape = CurrentShape.NoDrawing;
@@ -531,6 +536,7 @@ namespace _MyPaint
             isControlKeyPress = e.Control;
         }
 
+        //Group shapes
         private void btnGroup_Click(object sender, EventArgs e)
         {
             UncheckButton();
@@ -555,6 +561,7 @@ namespace _MyPaint
             }
         }
 
+        //Ungroup shapes
         private void btnUnGroup_Click(object sender, EventArgs e)
         {
             UncheckButton();
@@ -569,6 +576,7 @@ namespace _MyPaint
             pnlPaint.Invalidate();
         }
 
+        //Delete shapes
         private void btnDelete_Click(object sender, EventArgs e)
         {
             for (int i = 0; i < shapes.Count; i++)
@@ -582,10 +590,12 @@ namespace _MyPaint
             pnlPaint.Invalidate();
         }
 
-        //Draw mode (draw or fill)
+        //Change draw mode (draw or fill)
         private void ckbFill_CheckedChanged(object sender, EventArgs e)
         {
             bool fill = false;
+            UncheckButton();
+            currentShape = CurrentShape.NoDrawing;
             if (!ckbFill.Checked)
             {
                 mode = ShapeMode.NoFill;
@@ -597,7 +607,7 @@ namespace _MyPaint
             else
             {
                 mode = ShapeMode.Fill;
-                nmrSize.Enabled = false;
+                nmrSize.Enabled = false;+
                 btnLine.Enabled = btnBezier.Enabled = false;
                 cbbDashStyle.Enabled = false;
 
@@ -718,36 +728,19 @@ namespace _MyPaint
             }
         }
 
+        //Event Zoom shapes
         private void Zoom_Click(object sender, EventArgs e)
         {
             Button btn = sender as Button;
-            shapes.ForEach(shape =>
-            {
-                if (shape is ShapeSet group)
-                {
-                    foreach (Shape s in group)
-                    {
-                        int disX = (int)((s.endPoint.X - s.startPoint.X) * 0.25);
-                        int disY = (int)((s.endPoint.Y - s.startPoint.Y) * 0.25);
-                        if (btn.Tag.ToString() == "+")
-                            s.endPoint = new Point(s.endPoint.X + disX, s.endPoint.Y + disY);
-                        else if (btn.Tag.ToString() == "-")
-                            s.endPoint = new Point(s.endPoint.X - disX, s.endPoint.Y - disY);
-                    }
-                }
-                else
-                {
-                    int disX = (int)((shape.endPoint.X - shape.startPoint.X) * 0.25);
-                    int disY = (int)((shape.endPoint.Y - shape.startPoint.Y) * 0.25);
-                    if (btn.Tag.ToString() == "+")
-                        shape.endPoint = new Point(shape.endPoint.X + disX, shape.endPoint.Y + disY);
-                    else if (btn.Tag.ToString() == "-")
-                        shape.endPoint = new Point(shape.endPoint.X - disX, shape.endPoint.Y - disY);
-                }
-            });
+            if (btn.Tag.ToString() == "+")
+                zoom += 0.1f;
+            else if (btn.Tag.ToString() == "-")
+                zoom -= 0.1f;
+            else
+                zoom = 1;
+            lblScale.Text = (int)((zoom - 1) * 100) + "%";
             pnlPaint.Invalidate();
         }
         #endregion
-
     }
 }

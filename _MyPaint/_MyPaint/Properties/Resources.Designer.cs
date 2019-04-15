@@ -143,6 +143,16 @@ namespace _MyPaint.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icons8_reset_64 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-reset-64", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icons8_round_64 {
             get {
                 object obj = ResourceManager.GetObject("icons8-round-64", resourceCulture);
