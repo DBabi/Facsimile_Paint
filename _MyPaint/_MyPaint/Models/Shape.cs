@@ -22,29 +22,76 @@ namespace _MyPaint.Models
         public bool isSelect { get; set; }
         //Shape is filled
         public bool isFilled { get; set; }
-        //Name of shape
-        public string name { get; protected set; }
 
+        protected bool headIsControl;
+        public Shape()
+        {
+            myPen = new Pen(Color.Black, 1f);
+            startPoint = new Point(0, 0);
+            endPoint = new Point(0, 0);
+            isSelect = false;
+            isFilled = false;
+            headIsControl = false;
+        }
+        
         #region Method
 
         protected abstract GraphicsPath GraphicsPath { get; }
 
-        //When user click on shape
-        public abstract bool IsClick(Point point);
+        /// <summary>
+        /// When shapes be click
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns>return 1 : click inside
+        ///          return 0 : click border
+        ///          return -1: click outside </returns>
+        public virtual int IsClick(Point point)
+        {
+            if (IsPointControl(point))
+                return 1;
+            else if (GetOutLine(point))
+                return 0;
+            return -1;
+        }
 
+        //Checkout this point is point control to rezise
+        protected virtual bool IsPointControl(Point point)
+        {
+            if (point.X >= endPoint.X - myPen.Width / 2 - 3 && point.X <= endPoint.X + myPen.Width / 2 + 3)
+            {
+                if (point.Y >= endPoint.Y - myPen.Width / 2 - 3 && point.Y <= endPoint.Y + myPen.Width / 2 + 3)
+                {
+                    headIsControl = false;
+                    return true;
+                }
+            }
+            else if (point.X >= startPoint.X - myPen.Width / 2 - 3 && point.X <= startPoint.X + myPen.Width / 2 + 3)
+            {
+                if (point.Y >= startPoint.Y - myPen.Width / 2 - 3 && point.Y <= startPoint.Y + myPen.Width / 2 + 3)
+                {
+                    headIsControl = true;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public virtual void Resize(Point point)
+        {
+            if (headIsControl)
+                startPoint = point;
+            else
+                endPoint = point;
+        }
+
+        //Get of out line object
+        protected abstract bool GetOutLine(Point point);
         //Draw or fill shape
         public abstract void Draw(Graphics graphics);
 
         //Move shape
         public abstract void Move(Point distance);
 
-        //Clone object
-        public abstract object Clone();
-
-        public override string ToString()
-        {
-            return $"{name} [({startPoint.X}, {startPoint.Y}); ({endPoint.X}, {endPoint.Y})]";
-        }
         #endregion
     }
 }

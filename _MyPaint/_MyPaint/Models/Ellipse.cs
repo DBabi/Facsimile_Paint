@@ -12,11 +12,6 @@ namespace _MyPaint.Models
     /// </summary>
     class Ellipse : Shape
     {
-        public Ellipse()
-        {
-            name = "Eclipse";
-        }
-
         protected override GraphicsPath GraphicsPath
         {
             get
@@ -25,18 +20,6 @@ namespace _MyPaint.Models
                 path.AddEllipse(new System.Drawing.Rectangle(startPoint.X, startPoint.Y, endPoint.X - startPoint.X, endPoint.Y - startPoint.Y));
                 return path;
             }
-        }
-
-        public override object Clone()
-        {
-            return new Ellipse
-            {
-                startPoint = startPoint,
-                endPoint = endPoint,
-                isSelect = isSelect,
-                name = name,
-                myPen = myPen,
-            };
         }
 
         public override void Draw(Graphics graphics)
@@ -60,7 +43,7 @@ namespace _MyPaint.Models
             }
         }
 
-        public override bool IsClick(Point point)
+        protected override bool GetOutLine(Point point)
         {
             bool res = false;
             using (GraphicsPath path = GraphicsPath)

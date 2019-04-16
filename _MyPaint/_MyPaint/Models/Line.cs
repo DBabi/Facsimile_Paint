@@ -13,11 +13,6 @@ namespace _MyPaint.Models
     /// </summary>
     class Line : Shape
     {
-        public Line()
-        {
-            name = "Line";
-        }
-
         protected override GraphicsPath GraphicsPath
         {
             get
@@ -26,19 +21,6 @@ namespace _MyPaint.Models
                 path.AddLine(startPoint, endPoint);
                 return path;
             }
-        }
-
-
-        public override object Clone()
-        {
-            return new Line
-            {
-                startPoint = startPoint,
-                endPoint = endPoint,
-                myPen = myPen,
-                isSelect = isSelect,
-                name = name
-            };
         }
 
         public override void Draw(Graphics graphics)
@@ -52,7 +34,7 @@ namespace _MyPaint.Models
             }
         }
 
-        public override bool IsClick(Point point)
+        protected override bool GetOutLine(Point point)
         {
             bool res = false;
             using (GraphicsPath path = GraphicsPath)

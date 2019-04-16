@@ -27,11 +27,13 @@ namespace _MyPaint
         };
         private float zoom;
         private Shape selectedShape;
+        private Shape resizeShape;
         private System.Drawing.Rectangle selectedRegion;
         private bool isMouseDown;
         private bool isDrawPolygon;
         private bool isDrawBezier;
         private bool isMovingShape;
+        private bool isResizeShape;
         private bool isControlKeyPress;
         private bool isMouseSelect;
         #endregion
@@ -43,6 +45,7 @@ namespace _MyPaint
 
         private void frmMain_Load(object sender, EventArgs e)
         {
+            this.KeyPreview = true;
             buttons = new List<Button> { btnLine, btnRectangle, btnEllipse, btnBezier, btnPolygon, btnSelect };
             cbbDashStyle.SelectedIndex = 0;
             nmrSize.Value = 1;
@@ -246,7 +249,7 @@ namespace _MyPaint
                 {
                     for (int i = 0; i < shapes.Count; i++)
                     {
-                        if (shapes[i].IsClick(e.Location))
+                        if (shapes[i].IsClick(e.Location) == 0)
                         {
                             shapes[i].isSelect = !shapes[i].isSelect;
                             pnlPaint.Invalidate();
@@ -261,7 +264,7 @@ namespace _MyPaint
                     pnlPaint.Invalidate();
                     for (int i = 0; i < shapes.Count; i++)
                     {
-                        if (shapes[i].IsClick(e.Location))
+                        if (shapes[i].IsClick(e.Location) == 0)
                         {
                             selectedShape = shapes[i];
                             shapes[i].isSelect = true;
@@ -273,17 +276,21 @@ namespace _MyPaint
                                 ckbFill.Checked = shapes[i].isFilled;
                             }
 
+                            isMovingShape = true;
+                            previousPoint = e.Location;
+
                             pnlPaint.Invalidate();
+                            break;
+                        }
+                        else if(shapes[i].IsClick(e.Location) == 1)
+                        {
+                            resizeShape = shapes[i];
+                            isResizeShape = true;
                             break;
                         }
                     }
 
-                    if (selectedShape != null)
-                    {
-                        isMovingShape = true;
-                        previousPoint = e.Location;
-                    }
-                    else
+                    if(selectedShape == null && resizeShape == null)
                     {
                         isMouseSelect = true;
                         selectedRegion = new System.Drawing.Rectangle(e.Location, new Size(0, 0));
@@ -419,6 +426,12 @@ namespace _MyPaint
 
                 pnlPaint.Invalidate();
             }
+            else if(isResizeShape)
+            {
+                resizeShape.isSelect = true;
+                resizeShape.Resize(e.Location);
+                pnlPaint.Invalidate();
+            }
             else if (currentShape == CurrentShape.NoDrawing)
             {
                 if (isMouseSelect)
@@ -430,9 +443,13 @@ namespace _MyPaint
                 }
                 else
                 {
-                    if (shapes.Exists(shape => shape.IsClick(e.Location)))
+                    if (shapes.Exists(shape => shape.IsClick(e.Location) == 0))
                     {
                         pnlPaint.Cursor = Cursors.SizeAll;
+                    }
+                    else if (shapes.Exists(shape => shape.IsClick(e.Location) == 1))
+                    {
+                        pnlPaint.Cursor = Cursors.NoMove2D;
                     }
                     else
                     {
@@ -464,6 +481,12 @@ namespace _MyPaint
             {
                 isMovingShape = false;
                 selectedShape = null;
+            }
+            else if(isResizeShape)
+            {
+                isResizeShape = false;
+                resizeShape.isSelect = false;
+                resizeShape = null;
             }
             else if (isMouseSelect)
             {

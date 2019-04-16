@@ -16,12 +16,7 @@ namespace _MyPaint.Models
     class ShapeSet : Shape, IEnumerable
     {
         private List<Shape> Shapes = new List<Shape>();
-
-        public ShapeSet()
-        {
-            name = "Group";
-        }
-
+        private Point previousPoint;
         public Shape this[int index]
         {
             get => Shapes[index];
@@ -117,7 +112,7 @@ namespace _MyPaint.Models
             }
         }
 
-        public override bool IsClick(Point point)
+        protected override bool GetOutLine(Point point)
         {
             GraphicsPath[] paths = GraphicsPaths;
             for (int i = 0; i < paths.Length; i++)
@@ -126,7 +121,7 @@ namespace _MyPaint.Models
                 {
                     if (Shapes[i] is ShapeSet group)
                     {
-                        return group.IsClick(point);
+                        return group.GetOutLine(point);
                     }
                     else if (Shapes[i] is Line || Shapes[i] is Bezier)
                     {
@@ -166,6 +161,28 @@ namespace _MyPaint.Models
             return false;
         }
 
+
+        //Resize All children
+        public override void Resize(Point point)
+        {
+            //foreach (Shape s in Shapes)
+            //{
+            //    if (s is ShapeSet)
+            //        s.Resize(point);
+            //    else
+            //    {
+            //        if(headIsControl)
+            //        {
+            //            if (previousPoint == null)
+            //                previousPoint = startPoint;
+            //            if(s is Line || s is Rectangle || s is Ellipse)
+            //                s.Resize(new Point(point.X-))
+            //        }
+            //    }
+            //}
+
+        }
+
         public override void Move(Point distance)
         {
             for (int i = 0; i < Shapes.Count; i++)
@@ -202,23 +219,6 @@ namespace _MyPaint.Models
             }
             startPoint = new Point(startPoint.X + distance.X, startPoint.Y + distance.Y);
             endPoint = new Point(endPoint.X + distance.X, endPoint.Y + distance.Y);
-        }
-
-        public override object Clone()
-        {
-            ShapeSet group = new ShapeSet
-            {
-                startPoint = startPoint,
-                endPoint = endPoint,
-                isSelect = isSelect,
-                name = name,
-                myPen = myPen,
-            };
-            for (int i = 0; i < Shapes.Count; i++)
-            {
-                group.Shapes.Add(Shapes[i].Clone() as Shape);
-            }
-            return group;
         }
 
         IEnumerator IEnumerable.GetEnumerator()

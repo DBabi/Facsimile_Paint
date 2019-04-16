@@ -13,11 +13,6 @@ namespace _MyPaint.Models
     /// </summary>
     class Rectangle : Shape
     {
-        public Rectangle()
-        {
-            name = "Rectangle";
-        }
-
         protected override GraphicsPath GraphicsPath
         {
             get
@@ -44,18 +39,6 @@ namespace _MyPaint.Models
             }
         }
 
-        public override object Clone()
-        {
-            return new Rectangle
-            {
-                startPoint = startPoint,
-                endPoint = endPoint,
-                myPen = myPen,
-                isSelect = isSelect,
-                name = name
-            };
-        }
-
         public override void Draw(Graphics graphics)
         {
             using (GraphicsPath path = GraphicsPath)
@@ -77,7 +60,7 @@ namespace _MyPaint.Models
             }
         }
 
-        public override bool IsClick(Point point)
+        protected override bool GetOutLine(Point point)
         {
             bool res = false;
             using (GraphicsPath path = GraphicsPath)

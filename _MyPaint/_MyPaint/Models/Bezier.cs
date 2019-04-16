@@ -13,12 +13,7 @@ namespace _MyPaint.Models
     class Bezier : Shape
     {
         public List<Point> Points { get; set; } = new List<Point>();
-
-        public Bezier()
-        {
-            name = "Bezier";
-        }
-
+        private int indexPointControl;
         protected override GraphicsPath GraphicsPath
         {
             get
@@ -40,7 +35,7 @@ namespace _MyPaint.Models
             }
         }
 
-        public override bool IsClick(Point point)
+        protected override bool GetOutLine(Point point)
         {
             bool res = false;
             using (GraphicsPath path = GraphicsPath)
@@ -53,6 +48,23 @@ namespace _MyPaint.Models
             return res;
         }
 
+        protected override bool IsPointControl(Point point)
+        {
+            for (indexPointControl = 0; indexPointControl < Points.Count; indexPointControl++)
+                if (point.X >= Points[indexPointControl].X - myPen.Width / 2 - 3 && point.X <= Points[indexPointControl].X + myPen.Width / 2 + 3)
+                    if (point.Y >= Points[indexPointControl].Y - myPen.Width / 2 - 3 && point.Y <= Points[indexPointControl].Y + myPen.Width / 2 + 3)
+                    {
+                        return true;
+                    }
+
+            return false;
+        }
+
+        public override void Resize(Point point)
+        {
+            Points[indexPointControl] = point;
+        }
+
         public override void Move(Point distance)
         {
             startPoint = new Point(startPoint.X + distance.X, startPoint.Y + distance.Y);
@@ -61,20 +73,6 @@ namespace _MyPaint.Models
             {
                 Points[i] = new Point(Points[i].X + distance.X, Points[i].Y + distance.Y);
             }
-        }
-
-        public override object Clone()
-        {
-            Bezier bezier = new Bezier
-            {
-                startPoint = startPoint,
-                endPoint = endPoint,
-                isSelect = isSelect,
-                name = name,
-                myPen = myPen,
-            };
-            Points.ForEach(point => bezier.Points.Add(point));
-            return bezier;
         }
     }
 }
