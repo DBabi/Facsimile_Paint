@@ -73,7 +73,7 @@
             this.pnlPaint.Size = new System.Drawing.Size(1044, 419);
             this.pnlPaint.TabIndex = 1;
             this.pnlPaint.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlPaint_Paint);
-            this.pnlPaint.DoubleClick += new System.EventHandler(this.pnlPaint_DoubleClick);
+            this.pnlPaint.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pnlPaint_MouseClick);
             this.pnlPaint.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlPaint_MouseDown);
             this.pnlPaint.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlPaint_MouseMove);
             this.pnlPaint.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pnlPaint_MouseUp);

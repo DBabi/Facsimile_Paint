@@ -483,30 +483,31 @@ namespace _MyPaint
         }
 
         //End draw bezier and polygon
-        private void pnlPaint_DoubleClick(object sender, EventArgs e)
+        private void pnlPaint_MouseClick(object sender, MouseEventArgs e)
         {
-            if (isDrawPolygon)
+            if(e.Button == MouseButtons.Right)
             {
-                isDrawPolygon = false;
+                if (isDrawPolygon)
+                {
+                    isDrawPolygon = false;
 
-                Polygon polygon = shapes[shapes.Count - 1] as Polygon;
-                polygon.Points.RemoveAt(polygon.Points.Count - 1);
+                    Polygon polygon = shapes[shapes.Count - 1] as Polygon;
+                    polygon.Points.RemoveAt(polygon.Points.Count - 1);
 
-                pnlPaint.Invalidate();
+                    pnlPaint.Invalidate();
 
-                FindPolygonRegion(polygon);
+                    FindPolygonRegion(polygon);
+                }
+                else if (isDrawBezier)
+                {
+                    isDrawBezier = false;
+
+                    Bezier bezier = shapes[shapes.Count - 1] as Bezier;
+                    bezier.Points.RemoveAt(bezier.Points.Count - 1);
+                    pnlPaint.Invalidate();
+                    FindBezierRegion(bezier);
+                }
             }
-            else if (isDrawBezier)
-            {
-                isDrawBezier = false;
-
-                Bezier bezier = shapes[shapes.Count - 1] as Bezier;
-                bezier.Points.RemoveAt(bezier.Points.Count - 1);
-                bezier.Points.RemoveAt(bezier.Points.Count - 1);
-                pnlPaint.Invalidate();
-                FindBezierRegion(bezier);
-            }
-
         }
         #endregion
 
