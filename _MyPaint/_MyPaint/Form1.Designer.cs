@@ -461,8 +461,6 @@
             this.btnSelect.TabIndex = 5;
             this.btnSelect.UseVisualStyleBackColor = false;
             this.btnSelect.Click += new System.EventHandler(this.btnSelect_Click);
-            this.btnSelect.KeyDown += new System.Windows.Forms.KeyEventHandler(this.btnSelect_KeyDown);
-            this.btnSelect.KeyUp += new System.Windows.Forms.KeyEventHandler(this.btnSelect_KeyUp);
             // 
             // frmMain
             // 
@@ -473,11 +471,14 @@
             this.Controls.Add(this.pnlTool);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(1060, 550);
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "My_Paint";
             this.Load += new System.EventHandler(this.frmMain_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmMain_KeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.frmMain_KeyUp);
             this.pnlTool.ResumeLayout(false);
             this.pnlTool.PerformLayout();
             this.pnlToolChild.ResumeLayout(false);

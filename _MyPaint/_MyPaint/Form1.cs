@@ -525,13 +525,13 @@ namespace _MyPaint
         }
 
         //Event Ctrl down from keyboard
-        private void btnSelect_KeyDown(object sender, KeyEventArgs e)
+        private void frmMain_KeyDown(object sender, KeyEventArgs e)
         {
             isControlKeyPress = e.Control;
         }
 
         //Event Ctrl up from keyboard
-        private void btnSelect_KeyUp(object sender, KeyEventArgs e)
+        private void frmMain_KeyUp(object sender, KeyEventArgs e)
         {
             isControlKeyPress = e.Control;
         }
@@ -607,7 +607,7 @@ namespace _MyPaint
             else
             {
                 mode = ShapeMode.Fill;
-                nmrSize.Enabled = false;+
+                nmrSize.Enabled = false;
                 btnLine.Enabled = btnBezier.Enabled = false;
                 cbbDashStyle.Enabled = false;
 

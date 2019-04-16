@@ -228,7 +228,6 @@ namespace _MyPaint.Models
 
         public int Count => Shapes.Count;
 
-        [Obsolete("Phương thức này bị thừa, không được xài")]
         protected override GraphicsPath GraphicsPath => null;
     }
 }
