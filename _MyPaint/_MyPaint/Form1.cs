@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 using _MyPaint.Models;
 using System.Drawing.Imaging;
+using System.Reflection;
 
 namespace _MyPaint
 {
@@ -22,9 +19,9 @@ namespace _MyPaint
         private Point previousPoint;
         private ShapeMode mode = ShapeMode.NoFill;
         private Brush brush = new SolidBrush(Color.Blue);
-        private Pen framePen = new Pen(Color.Blue, 1)
+        private Pen selectPen = new Pen(Color.Blue, 1)
         {
-            DashPattern = new float[] { 3, 3, 3, 3 },
+            DashPattern = new float[] { 5, 5, 5, 5 },
             DashStyle = DashStyle.Custom
         };
         private float zoom;
@@ -36,7 +33,7 @@ namespace _MyPaint
         private bool isDrawBezier;
         private bool isMovingShape;
         private bool isResizeShape;
-        private bool isControlKeyPress;
+        private bool isCtrPress;
         private bool isMouseSelect;
         #endregion
 
@@ -45,13 +42,25 @@ namespace _MyPaint
             InitializeComponent();
         }
 
+        //Set double buffer for panel 
+        public static void SetDoubleBuffered(Control control)
+        {
+            // set instance non-public property with name "DoubleBuffered" to true
+            typeof(Control).InvokeMember("DoubleBuffered",
+                BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic,
+                null, control, new object[] { true });
+        }
+
         private void frmMain_Load(object sender, EventArgs e)
         {
             this.KeyPreview = true;
-            buttons = new List<Button> { btnLine, btnRectangle, btnEllipse, btnBezier, btnPolygon, btnSelect };
+            SetDoubleBuffered(pnlPaint);
+            buttons = new List<Button> { btnLine, btnRectangle, btnEllipse, btnBezier, btnPolygon,
+                btnSelect, btnGroup, btnUnGroup, btnZoomIn, btnZoomOut, btnReset };
             cbbDashStyle.SelectedIndex = 0;
             nmrSize.Value = 1;
             zoom = 1f;
+
         }
 
         #region Support Function
@@ -209,7 +218,7 @@ namespace _MyPaint
                     shape.Draw(e.Graphics);
                     if (shape is Ellipse || shape is ShapeSet)
                     {
-                        e.Graphics.DrawRectangle(framePen, new System.Drawing.Rectangle(shape.startPoint.X, shape.startPoint.Y, shape.endPoint.X - shape.startPoint.X, shape.endPoint.Y - shape.startPoint.Y));
+                        e.Graphics.DrawRectangle(selectPen, new System.Drawing.Rectangle(shape.startPoint.X, shape.startPoint.Y, shape.endPoint.X - shape.startPoint.X, shape.endPoint.Y - shape.startPoint.Y));
                     }
                     else if (shape is Bezier curve)
                     {
@@ -239,7 +248,7 @@ namespace _MyPaint
 
             if (isMouseSelect)
             {
-                e.Graphics.DrawRectangle(framePen, selectedRegion);
+                e.Graphics.DrawRectangle(selectPen, selectedRegion);
             }
         }
 
@@ -247,7 +256,7 @@ namespace _MyPaint
         {
             if (currentShape == CurrentShape.NoDrawing)
             {
-                if (isControlKeyPress)
+                if (isCtrPress)
                 {
                     for (int i = 0; i < shapes.Count; i++)
                     {
@@ -556,13 +565,13 @@ namespace _MyPaint
         //Event Ctrl down from keyboard
         private void frmMain_KeyDown(object sender, KeyEventArgs e)
         {
-            isControlKeyPress = e.Control;
+            isCtrPress = e.Control;
         }
 
         //Event Ctrl up from keyboard
         private void frmMain_KeyUp(object sender, KeyEventArgs e)
         {
-            isControlKeyPress = e.Control;
+            isCtrPress = e.Control;
         }
 
         //Group shapes
@@ -785,17 +794,21 @@ namespace _MyPaint
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            pnlPaint.BackgroundImageLayout = ImageLayout.Stretch;
             OpenFileDialog of = new OpenFileDialog();
             of.Filter = "Bitmap Image (.bmp)|*.bmp|Gif Image (.gif)|*.gif|JPEG Image (.jpeg)|*.jpeg|Png Image (.png)|*.png|Tiff Image (.tiff)|*.tiff|Wmf Image (.wmf)|*.wmf";
             of.ShowDialog();
             var path = of.FileName;
             if (path != "")
+            {
+                pnlPaint.BackgroundImageLayout = ImageLayout.None;
                 pnlPaint.BackgroundImage = Image.FromFile(path);
+            }
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            pnlPaint.BackgroundImage = null;
+            pnlPaint.BackColor = Color.White;
             shapes.Clear();
             selectedShape = null;
             resizeShape = null;
@@ -804,16 +817,16 @@ namespace _MyPaint
             zoom = 1f;
             currentShape = CurrentShape.NoDrawing;
             mode = ShapeMode.NoFill;
-            isControlKeyPress = isDrawBezier = isDrawPolygon = isMouseDown = isMouseSelect = isMovingShape = false;
+            isCtrPress = isDrawBezier = isDrawPolygon = isMouseDown = isMouseSelect = isMovingShape = false;
             UncheckButton();
             pnlPaint.Invalidate();
         }
-        #endregion
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Do you want exit?", "Exit", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
                 this.Close();
         }
+        #endregion
     }
 }
