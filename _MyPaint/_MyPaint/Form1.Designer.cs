@@ -58,19 +58,27 @@
             this.cbbDashStyle = new System.Windows.Forms.ComboBox();
             this.btnColor = new System.Windows.Forms.Button();
             this.btnSelect = new System.Windows.Forms.Button();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.menuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlTool.SuspendLayout();
             this.pnlToolChild.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nmrSize)).BeginInit();
             this.grbShape.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlPaint
             // 
             this.pnlPaint.BackColor = System.Drawing.Color.White;
             this.pnlPaint.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlPaint.Location = new System.Drawing.Point(0, 92);
+            this.pnlPaint.Location = new System.Drawing.Point(0, 116);
             this.pnlPaint.Name = "pnlPaint";
-            this.pnlPaint.Size = new System.Drawing.Size(1044, 419);
+            this.pnlPaint.Size = new System.Drawing.Size(1044, 445);
             this.pnlPaint.TabIndex = 1;
             this.pnlPaint.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlPaint_Paint);
             this.pnlPaint.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pnlPaint_MouseClick);
@@ -95,7 +103,7 @@
             this.pnlTool.Controls.Add(this.btnColor);
             this.pnlTool.Controls.Add(this.btnSelect);
             this.pnlTool.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlTool.Location = new System.Drawing.Point(0, 0);
+            this.pnlTool.Location = new System.Drawing.Point(0, 24);
             this.pnlTool.Name = "pnlTool";
             this.pnlTool.Size = new System.Drawing.Size(1044, 92);
             this.pnlTool.TabIndex = 0;
@@ -252,8 +260,8 @@
             // 
             // nmrSize
             // 
-            this.nmrSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.nmrSize.Location = new System.Drawing.Point(663, 38);
+            this.nmrSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.nmrSize.Location = new System.Drawing.Point(687, 38);
             this.nmrSize.Maximum = new decimal(new int[] {
             25,
             0,
@@ -266,7 +274,7 @@
             0});
             this.nmrSize.Name = "nmrSize";
             this.nmrSize.ReadOnly = true;
-            this.nmrSize.Size = new System.Drawing.Size(70, 23);
+            this.nmrSize.Size = new System.Drawing.Size(70, 26);
             this.nmrSize.TabIndex = 19;
             this.nmrSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.nmrSize.Value = new decimal(new int[] {
@@ -404,7 +412,7 @@
             this.label2.AutoSize = true;
             this.label2.BackColor = System.Drawing.Color.Transparent;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(663, 12);
+            this.label2.Location = new System.Drawing.Point(687, 12);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(35, 17);
             this.label2.TabIndex = 12;
@@ -424,7 +432,7 @@
             // 
             this.cbbDashStyle.BackColor = System.Drawing.Color.White;
             this.cbbDashStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbbDashStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbbDashStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbbDashStyle.FormattingEnabled = true;
             this.cbbDashStyle.Items.AddRange(new object[] {
             "Solid",
@@ -434,14 +442,16 @@
             "Dash Dot Dot"});
             this.cbbDashStyle.Location = new System.Drawing.Point(534, 38);
             this.cbbDashStyle.Name = "cbbDashStyle";
-            this.cbbDashStyle.Size = new System.Drawing.Size(115, 24);
+            this.cbbDashStyle.Size = new System.Drawing.Size(138, 28);
             this.cbbDashStyle.TabIndex = 8;
             this.cbbDashStyle.SelectedIndexChanged += new System.EventHandler(this.cbbDashStyle_SelectedIndexChanged);
             // 
             // btnColor
             // 
             this.btnColor.BackColor = System.Drawing.Color.Black;
-            this.btnColor.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnColor.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.btnColor.FlatAppearance.BorderSize = 3;
+            this.btnColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnColor.Location = new System.Drawing.Point(466, 12);
             this.btnColor.Name = "btnColor";
             this.btnColor.Size = new System.Drawing.Size(54, 54);
@@ -462,17 +472,76 @@
             this.btnSelect.UseVisualStyleBackColor = false;
             this.btnSelect.Click += new System.EventHandler(this.btnSelect_Click);
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuToolStripMenuItem,
+            this.aboutToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1044, 24);
+            this.menuStrip1.TabIndex = 2;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // menuToolStripMenuItem
+            // 
+            this.menuToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newToolStripMenuItem,
+            this.openToolStripMenuItem,
+            this.saveToolStripMenuItem,
+            this.exitToolStripMenuItem});
+            this.menuToolStripMenuItem.Name = "menuToolStripMenuItem";
+            this.menuToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
+            this.menuToolStripMenuItem.Text = "&Menu";
+            // 
+            // newToolStripMenuItem
+            // 
+            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.newToolStripMenuItem.Text = "&New";
+            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
+            // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem.Text = "&Open";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveToolStripMenuItem.Text = "&Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Text = "&Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+            this.aboutToolStripMenuItem.Text = "&About";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1044, 511);
+            this.ClientSize = new System.Drawing.Size(1044, 561);
             this.Controls.Add(this.pnlPaint);
             this.Controls.Add(this.pnlTool);
+            this.Controls.Add(this.menuStrip1);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
-            this.MinimumSize = new System.Drawing.Size(1060, 550);
+            this.MainMenuStrip = this.menuStrip1;
+            this.MinimumSize = new System.Drawing.Size(1060, 600);
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "My_Paint";
@@ -485,7 +554,10 @@
             this.pnlToolChild.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nmrSize)).EndInit();
             this.grbShape.ResumeLayout(false);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -520,6 +592,13 @@
         private System.Windows.Forms.Panel pnlToolChild;
         private System.Windows.Forms.Label lblScale;
         private System.Windows.Forms.Button btnReset;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem menuToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
     }
 }
 

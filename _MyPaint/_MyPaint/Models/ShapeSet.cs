@@ -11,12 +11,12 @@ namespace _MyPaint.Models
 {
     /// <summary>
     /// Class ShapeSet Model
-    /// Include on other shapes
+    /// Include all of shapes
     /// </summary>
     class ShapeSet : Shape, IEnumerable
     {
         private List<Shape> Shapes = new List<Shape>();
-        private Point previousPoint;
+
         public Shape this[int index]
         {
             get => Shapes[index];
@@ -161,28 +161,6 @@ namespace _MyPaint.Models
             return false;
         }
 
-
-        //Resize All children
-        public override void Resize(Point point)
-        {
-            //foreach (Shape s in Shapes)
-            //{
-            //    if (s is ShapeSet)
-            //        s.Resize(point);
-            //    else
-            //    {
-            //        if(headIsControl)
-            //        {
-            //            if (previousPoint == null)
-            //                previousPoint = startPoint;
-            //            if(s is Line || s is Rectangle || s is Ellipse)
-            //                s.Resize(new Point(point.X-))
-            //        }
-            //    }
-            //}
-
-        }
-
         public override void Move(Point distance)
         {
             for (int i = 0; i < Shapes.Count; i++)
@@ -221,6 +199,55 @@ namespace _MyPaint.Models
             endPoint = new Point(endPoint.X + distance.X, endPoint.Y + distance.Y);
         }
 
+        //Set style for all children
+        public void SetStyle(DashStyle style)
+        {
+            foreach (Shape s in Shapes)
+            {
+                if (s is ShapeSet group)
+                    group.SetStyle(style);
+                else
+                    s.myPen.DashStyle = style;
+            }
+        }
+
+        //Set color for all children
+        public void SetColor(Color color)
+        {
+            foreach (Shape s in Shapes)
+            {
+                if (s is ShapeSet group)
+                    group.SetColor(color);
+                else
+                    s.myPen.Color = color;
+            }
+        }
+
+        //Set width for all children
+        public void SetSize(int size)
+        {
+            foreach (Shape s in Shapes)
+            {
+                if (s is ShapeSet group)
+                    group.SetSize(size);
+                else
+                    s.myPen.Width = size;
+            }
+        }
+
+        //Fill or not fill all children
+        public void FillAll(bool isFill)
+        {
+            foreach (Shape s in Shapes)
+            {
+                if (s is ShapeSet group)
+                    group.FillAll(isFill);
+                else
+                    s.isFilled = isFill;
+            }
+        }
+
+        //To use Collection
         IEnumerator IEnumerable.GetEnumerator()
         {
             return Shapes.GetEnumerator();

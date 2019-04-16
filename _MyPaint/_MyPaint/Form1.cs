@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 using _MyPaint.Models;
+using System.Drawing.Imaging;
+
 namespace _MyPaint
 {
     public partial class frmMain : Form
@@ -284,9 +286,12 @@ namespace _MyPaint
                         }
                         else if(shapes[i].IsClick(e.Location) == 1)
                         {
-                            resizeShape = shapes[i];
-                            isResizeShape = true;
-                            break;
+                            if (!(shapes[i] is ShapeSet))
+                            {
+                                resizeShape = shapes[i];
+                                isResizeShape = true;
+                                break;
+                            }
                         }
                     }
 
@@ -447,7 +452,7 @@ namespace _MyPaint
                     {
                         pnlPaint.Cursor = Cursors.SizeAll;
                     }
-                    else if (shapes.Exists(shape => shape.IsClick(e.Location) == 1))
+                    else if (shapes.Exists(shape => shape.IsClick(e.Location) == 1 && !(shape is ShapeSet)))
                     {
                         pnlPaint.Cursor = Cursors.NoMove2D;
                     }
@@ -641,10 +646,7 @@ namespace _MyPaint
             {
                 if (shape is ShapeSet group)
                 {
-                    foreach (Shape s in group)
-                    {
-                        s.isFilled = fill;
-                    }
+                    group.FillAll(fill);
                 }
                 else
                 {
@@ -666,10 +668,7 @@ namespace _MyPaint
             {
                 if (shape is ShapeSet group)
                 {
-                    foreach (Shape s in group)
-                    {
-                        s.myPen.Color = btnColor.BackColor;
-                    }
+                    group.SetColor(btnColor.BackColor);
                 }
                 else
                 {
@@ -686,10 +685,7 @@ namespace _MyPaint
             {
                 if (shape is ShapeSet group)
                 {
-                    foreach (Shape s in group)
-                    {
-                        s.myPen.DashStyle = (DashStyle)cbbDashStyle.SelectedIndex;
-                    }
+                    group.SetStyle((DashStyle)cbbDashStyle.SelectedIndex);
                 }
                 else
                 {
@@ -706,10 +702,7 @@ namespace _MyPaint
             {
                 if (shape is ShapeSet group)
                 {
-                    foreach (Shape s in group)
-                    {
-                        s.myPen.Width = int.Parse(nmrSize.Value.ToString());
-                    }
+                    group.SetSize(int.Parse(nmrSize.Value.ToString()));
                 }
                 else
                 {
@@ -766,5 +759,61 @@ namespace _MyPaint
             pnlPaint.Invalidate();
         }
         #endregion
+
+        #region MenuControl
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string s = "Author : Quận Cute \n K17 HCMUTE";
+            MessageBox.Show(s, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int width = pnlPaint.Size.Width;
+            int height = pnlPaint.Size.Height;
+
+            Bitmap bm = new Bitmap(width, height);
+            pnlPaint.DrawToBitmap(bm, new System.Drawing.Rectangle(0, 0, width, height));
+
+            SaveFileDialog sf = new SaveFileDialog();
+            sf.Filter = "Bitmap Image (.bmp)|*.bmp|Gif Image (.gif)|*.gif|JPEG Image (.jpeg)|*.jpeg|Png Image (.png)|*.png|Tiff Image (.tiff)|*.tiff|Wmf Image (.wmf)|*.wmf";
+            sf.ShowDialog();
+            var path = sf.FileName;
+
+            if (path != "")
+                bm.Save(path, ImageFormat.Bmp);
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            pnlPaint.BackgroundImageLayout = ImageLayout.Stretch;
+            OpenFileDialog of = new OpenFileDialog();
+            of.Filter = "Bitmap Image (.bmp)|*.bmp|Gif Image (.gif)|*.gif|JPEG Image (.jpeg)|*.jpeg|Png Image (.png)|*.png|Tiff Image (.tiff)|*.tiff|Wmf Image (.wmf)|*.wmf";
+            of.ShowDialog();
+            var path = of.FileName;
+            if (path != "")
+                pnlPaint.BackgroundImage = Image.FromFile(path);
+        }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            shapes.Clear();
+            selectedShape = null;
+            resizeShape = null;
+            cbbDashStyle.SelectedIndex = 0;
+            nmrSize.Value = 1;
+            zoom = 1f;
+            currentShape = CurrentShape.NoDrawing;
+            mode = ShapeMode.NoFill;
+            isControlKeyPress = isDrawBezier = isDrawPolygon = isMouseDown = isMouseSelect = isMovingShape = false;
+            UncheckButton();
+            pnlPaint.Invalidate();
+        }
+        #endregion
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Do you want exit?", "Exit", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
+                this.Close();
+        }
     }
 }
